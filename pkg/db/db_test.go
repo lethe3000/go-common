@@ -61,13 +61,9 @@ func TestDbInit(t *testing.T) {
 		server:   "localhost:3306",
 	}
 	InitDb(config)
-	assert.NotNil(t, db)
+	assert.NotNil(t, DB())
 }
 
 func TestInitTestDb(t *testing.T) {
-	config := dbconfig{
-		driver: SQLite,
-		dsn:    SqliteMemoryDsn,
-	}
-	InitDb(config)
+	InitTestDb()
 }

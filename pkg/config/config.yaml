@@ -1,0 +1,4 @@
+db:
+  database_driver: sqlite3
+gin:
+  http_port: 8888

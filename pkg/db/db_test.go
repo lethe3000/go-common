@@ -66,4 +66,5 @@ func TestDbInit(t *testing.T) {
 
 func TestInitTestDb(t *testing.T) {
 	InitTestDb()
+	assert.NotNil(t, DB())
 }

@@ -1,14 +1,15 @@
 package log
 
 import (
-	"go.uber.org/zap"
 	"sync"
+
+	"go.uber.org/zap"
 )
 
 var logger_ *zap.SugaredLogger
 var once sync.Once
 
-func initLogger() {
+func init() {
 	once.Do(func() {
 		logger, err := zap.NewProduction()
 		if err != nil {

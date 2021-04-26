@@ -60,6 +60,10 @@ func processResponse(resp gorequest.Response, body []byte, errs []error, result 
 	if err := unmarshal(body, &result); err != nil {
 		return err
 	}
+
+	if validators == nil {
+		return nil
+	}
 	for _, fn := range validators {
 		if err := fn(result); err != nil {
 			return err
@@ -79,5 +83,12 @@ func Post(url string, resource interface{}, headers map[string]string, params ma
 	base := gorequest.New().Post(url)
 	prepareRequest(base, headers, params)
 	resp, body, errs := base.Send(resource).EndBytes()
+	return processResponse(resp, body, errs, result, validators...)
+}
+
+func Delete(url string, headers map[string]string, params map[string]string, result interface{}, validators ...func(result interface{}) error) error {
+	base := gorequest.New().Delete(url)
+	prepareRequest(base, headers, params)
+	resp, body, errs := base.EndBytes()
 	return processResponse(resp, body, errs, result, validators...)
 }

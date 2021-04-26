@@ -57,6 +57,10 @@ func processResponse(resp gorequest.Response, body []byte, errs []error, result 
 		return err
 	}
 
+	if len(body) == 0 {
+		// 204 NO CONTENT
+		return nil
+	}
 	if err := unmarshal(body, &result); err != nil {
 		return err
 	}

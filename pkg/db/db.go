@@ -142,7 +142,7 @@ func InitDb(c dbConfig) {
 
 func InitTestDb() {
 	var err error
-	_ = os.Remove(".test.db")
+	_ = os.Remove("test.db")
 	db, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("init test db err: %v", err)

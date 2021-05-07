@@ -68,3 +68,8 @@ func TestInitTestDb(t *testing.T) {
 	InitTestDb()
 	assert.NotNil(t, DB())
 }
+
+func TestMemoryTestDb(t *testing.T) {
+	InitTestMemoryDb()
+	assert.NotNil(t, DB())
+}

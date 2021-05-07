@@ -149,6 +149,14 @@ func InitTestDb() {
 	}
 }
 
+func InitTestMemoryDb() {
+	var err error
+	db, err = gorm.Open(sqlite.Open(SqliteMemoryDsn), &gorm.Config{})
+	if err != nil {
+		log.Fatalf("init test db err: %v", err)
+	}
+}
+
 func DB() *gorm.DB {
 	if db == nil {
 		panic("db instance not initialized")

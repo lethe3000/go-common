@@ -1,9 +1,10 @@
 package config
 
 import (
-	"go-common/pkg/db"
 	"os"
 	"testing"
+
+	"github.com/lethe3000/go-common/pkg/db"
 
 	"github.com/stretchr/testify/assert"
 )

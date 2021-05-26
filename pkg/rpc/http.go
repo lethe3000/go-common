@@ -67,9 +67,6 @@ func processResponse(resp gorequest.Response, body []byte, errs []error, result 
 		return err
 	}
 
-	if validators == nil {
-		return nil
-	}
 	for _, fn := range validators {
 		if err := fn(result); err != nil {
 			return err

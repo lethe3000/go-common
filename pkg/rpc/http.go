@@ -53,9 +53,7 @@ func processResponse(resp gorequest.Response, body []byte, errs []error, result 
 		return err
 	}
 
-	if err := statusCodeCheck(resp); err != nil {
-		return err
-	}
+	statusBadError := statusCodeCheck(resp)
 
 	if len(body) == 0 {
 		// 204 NO CONTENT
@@ -77,7 +75,7 @@ func processResponse(resp gorequest.Response, body []byte, errs []error, result 
 			return err
 		}
 	}
-	return nil
+	return statusBadError
 }
 
 func Get(url string, headers map[string]string, params map[string]string, result interface{}, validators ...func(result interface{}) error) error {

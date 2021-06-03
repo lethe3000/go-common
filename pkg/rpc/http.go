@@ -11,6 +11,8 @@ import (
 var (
 	HttpRequestErr       = errors.New("http请求异常")
 	HttpStatusCodeBadErr = errors.New("返回值不为2xx 3xx")
+	ContentTypeKey       = "Content-Type"
+	Json                 = "application/json"
 )
 
 type ValidResponseContent interface {
@@ -26,7 +28,7 @@ func statusCodeCheck(response gorequest.Response) error {
 
 func prepareRequest(base *gorequest.SuperAgent, headers map[string]string, params map[string]string) *gorequest.SuperAgent {
 	for k, v := range headers {
-		base.AppendHeader(k, v)
+		base = base.AppendHeader(k, v)
 	}
 	for k, v := range params {
 		base = base.Param(k, v)
@@ -64,7 +66,7 @@ func processResponse(resp gorequest.Response, body []byte, errs []error, result 
 
 	if len(body) == 0 {
 		// 204 NO CONTENT
-		return nil
+		return statusBadError
 	}
 	if err := unmarshal(body, &result); err != nil {
 		return err
@@ -100,14 +102,15 @@ func Delete(url string, headers map[string]string, params map[string]string, res
 }
 
 func doRequest(method string, url string, data interface{}, headers map[string]string, params map[string]string, cookies []*http.Cookie, result interface{}, validators ...func(result interface{}) error) (gorequest.Response, []byte, error) {
-	base := gorequest.New().AddCookies(cookies)
-	prepareRequestV2(base, headers, params, cookies)
+	base := gorequest.New()
 	switch method {
 	case "get":
 		base = base.Get(url)
 	case "post":
 		base = base.Post(url)
 	}
+	prepareRequestV2(base, headers, params, cookies)
+
 	resp, body, errs := base.Send(data).EndBytes()
 	return resp, body, processResponse(resp, body, errs, result, validators...)
 }

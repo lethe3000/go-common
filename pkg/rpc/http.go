@@ -34,6 +34,13 @@ func prepareRequest(base *gorequest.SuperAgent, headers map[string]string, param
 	return base
 }
 
+func prepareRequestV2(base *gorequest.SuperAgent, headers map[string]string, params map[string]string, cookies []*http.Cookie) *gorequest.SuperAgent {
+	if len(cookies) > 0 {
+		base.AddCookies(cookies)
+	}
+	return prepareRequest(base, headers, params)
+}
+
 func handleRequestErrors(errs []error) error {
 	if errs != nil {
 		return HttpRequestErr
@@ -57,10 +64,6 @@ func processResponse(resp gorequest.Response, body []byte, errs []error, result 
 
 	if len(body) == 0 {
 		// 204 NO CONTENT
-		return nil
-	}
-	if result == nil {
-		// Discard response
 		return nil
 	}
 	if err := unmarshal(body, &result); err != nil {
@@ -94,4 +97,25 @@ func Delete(url string, headers map[string]string, params map[string]string, res
 	prepareRequest(base, headers, params)
 	resp, body, errs := base.EndBytes()
 	return processResponse(resp, body, errs, result, validators...)
+}
+
+func doRequest(method string, url string, data interface{}, headers map[string]string, params map[string]string, cookies []*http.Cookie, result interface{}, validators ...func(result interface{}) error) (gorequest.Response, []byte, error) {
+	base := gorequest.New().AddCookies(cookies)
+	prepareRequestV2(base, headers, params, cookies)
+	switch method {
+	case "get":
+		base = base.Get(url)
+	case "post":
+		base = base.Post(url)
+	}
+	resp, body, errs := base.Send(data).EndBytes()
+	return resp, body, processResponse(resp, body, errs, result, validators...)
+}
+
+func GetV2(url string, headers map[string]string, params map[string]string, cookies []*http.Cookie, response interface{}, validators ...func(result interface{}) error) (*http.Response, []byte, error) {
+	return doRequest("get", url, nil, headers, params, cookies, response, validators...)
+}
+
+func PostV2(url string, data interface{}, headers map[string]string, params map[string]string, cookies []*http.Cookie, response interface{}, validators ...func(result interface{}) error) (*http.Response, []byte, error) {
+	return doRequest("post", url, data, headers, params, cookies, response, validators...)
 }

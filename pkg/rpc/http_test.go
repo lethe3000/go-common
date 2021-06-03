@@ -1,21 +1,18 @@
 package rpc
 
 import (
-	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 var (
-	testUrl     = "http://inf-feishu-app-manager.nt.dev.fiture.com/api/v1/corps/1"
-	valid       = "Y6bKZsE1gVn6thYsEIDIerD-oYrNvCwFUGg0NSapy0M"
-	invalid     = "1"
+	testUrl     = "https://jsonplaceholder.typicode.com/todos/1"
+	postUrl     = "https://jsonplaceholder.typicode.com/posts"
+	valid       = "2"
 	validSecret = map[string]string{
 		"secret": valid,
-	}
-	invalidSecret = map[string]string{
-		"secret": invalid,
 	}
 )
 
@@ -26,13 +23,20 @@ func TestGet(t *testing.T) {
 		assert.Nil(t, err)
 	})
 
-	t.Run("error", func(t *testing.T) {
-		var resp map[string]interface{}
-		err := Get(testUrl, nil, invalidSecret, &resp)
-		assert.NotNil(t, err)
-		assert.True(t, errors.Is(err, HttpStatusCodeBadErr))
-	})
+	t.Run("v2", func(t *testing.T) {
+		var result map[string]interface{}
+		resp, _, err := GetV2(testUrl, nil, nil, nil, &result)
+		assert.Nil(t, err)
+		fmt.Println(resp)
 
+		resp, _, err = PostV2(postUrl, map[string]interface{}{
+			"title":  "foo",
+			"body":   "bar",
+			"userId": 1,
+		}, nil, nil, nil, &result)
+		assert.Nil(t, err)
+		fmt.Println(resp)
+	})
 }
 
 func TestPost(t *testing.T) {

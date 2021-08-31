@@ -147,6 +147,7 @@ func InitTestDb() {
 	if err != nil {
 		log.Fatalf("init test db err: %v", err)
 	}
+	db = db.Debug()
 }
 
 func InitTestMemoryDb() {
@@ -155,6 +156,7 @@ func InitTestMemoryDb() {
 	if err != nil {
 		log.Fatalf("init test db err: %v", err)
 	}
+	db = db.Debug()
 }
 
 func DB() *gorm.DB {

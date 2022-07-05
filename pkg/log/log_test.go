@@ -2,13 +2,22 @@ package log
 
 import (
 	"testing"
-	"time"
-
-	"go.uber.org/zap"
 )
 
+type logconfig struct {
+}
+
+func (l logconfig) Debug() bool {
+	return true
+}
+
+func (l logconfig) ServerName() string {
+	return "go-common"
+}
+
 func TestLogger(t *testing.T) {
-	Logger().Infof("info: %s", "info message")
-	Logger().Infow("infow:", "Url", "http://fiture.com", "retry", 3, "backoff", time.Second)
-	Logger().Info("info:", zap.String("url", "http://fiture.com"))
+	c := logconfig{}
+	logger := NewLogger(WithZap(c))(c)
+	logger.Infof("info: %s", "info message")
+	logger.Debugf("debug: %s", "debug")
 }

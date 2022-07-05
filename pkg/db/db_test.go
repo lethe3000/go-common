@@ -3,73 +3,18 @@ package db
 import (
 	"testing"
 
+	"gorm.io/gorm/logger"
+
 	"github.com/stretchr/testify/assert"
 )
 
-type dbconfig struct {
-	driver   string
-	dsn      string
-	user     string
-	password string
-	name     string
-	server   string
-}
-
-func (d dbconfig) DatabaseDriver() string {
-	return d.driver
-}
-
-func (d dbconfig) DatabaseDsn() string {
-	return d.dsn
-}
-
-func (d dbconfig) DatabaseUser() string {
-	return d.user
-}
-
-func (d dbconfig) DatabasePassword() string {
-	return d.password
-}
-
-func (d dbconfig) DatabaseName() string {
-	return d.name
-}
-
-func (d dbconfig) DatabaseServer() string {
-	return d.server
-}
-
-func (d dbconfig) DatabaseConns() int {
-	return 1
-}
-
-func (d dbconfig) DatabaseConnsIdle() int {
-	return 5
-}
-
-func (d dbconfig) Echo() bool {
-	return true
-}
-
-func TestDbInit(t *testing.T) {
-	config := dbconfig{
-		driver:   MySQL,
-		dsn:      "",
-		user:     "root",
-		password: "root",
-		name:     "feishu",
-		server:   "localhost:3306",
-	}
-	InitDb(config)
-	assert.NotNil(t, DB())
-}
-
-func TestInitTestDb(t *testing.T) {
-	InitTestDb()
-	assert.NotNil(t, DB())
-}
-
-func TestMemoryTestDb(t *testing.T) {
-	InitTestMemoryDb()
-	assert.NotNil(t, DB())
+func TestDatabase(t *testing.T) {
+	t.Parallel()
+	t.Run("test db", func(t *testing.T) {
+		db, err := NewTestMemoryDataBase(logger.Default)
+		assert.NoError(t, err)
+		var one int
+		db.Raw("select 1").Scan(&one)
+		assert.Equal(t, one, 1)
+	})
 }

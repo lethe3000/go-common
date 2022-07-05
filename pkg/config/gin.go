@@ -18,14 +18,14 @@ func (g ginOptions) setDefaults() {
 	viper.SetDefault("HTTP_PORT", 8080)
 }
 
-func (c *config) HttpMode() string {
+func (c *Config) HttpMode() string {
 	return c.options.Gin.HttpMode
 }
 
-func (c *config) HttpHost() string {
+func (c *Config) HttpHost() string {
 	return c.options.Gin.HttpHost
 }
 
-func (c *config) HttpPort() int {
+func (c *Config) HttpPort() int {
 	return c.options.Gin.HttpPort
 }

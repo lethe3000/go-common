@@ -26,38 +26,38 @@ func (db dbOptions) setDefaults() {
 	viper.SetDefault("DATABASE_CONNS", 10)
 }
 
-func (c *config) DatabaseDriver() string {
+func (c *Config) DatabaseDriver() string {
 	return c.options.DB.DatabaseDriver
 }
 
-func (c *config) DatabaseServer() string {
+func (c *Config) DatabaseServer() string {
 	return c.options.DB.DatabaseServer
 }
 
-func (c *config) DatabaseUser() string {
+func (c *Config) DatabaseUser() string {
 	return c.options.DB.DatabaseServer
 }
 
-func (c *config) DatabasePassword() string {
+func (c *Config) DatabasePassword() string {
 	return c.options.DB.DatabasePassword
 }
 
-func (c *config) DatabaseName() string {
+func (c *Config) DatabaseName() string {
 	return c.options.DB.DatabaseName
 }
 
-func (c *config) DatabaseDsn() string {
+func (c *Config) DatabaseDsn() string {
 	return c.options.DB.DatabaseDsn
 }
 
-func (c *config) DatabaseConnsIdle() int {
+func (c *Config) DatabaseConnsIdle() int {
 	return c.options.DB.DatabaseConnsIdle
 }
 
-func (c *config) DatabaseConns() int {
+func (c *Config) DatabaseConns() int {
 	return c.options.DB.DatabaseConns
 }
 
-func (c *config) Echo() bool {
+func (c *Config) Echo() bool {
 	return c.options.DB.Echo
 }
